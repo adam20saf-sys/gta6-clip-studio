@@ -1,59 +1,33 @@
 # GTA 6 Clip Studio
 
-Aplicación web estática optimizada para Safari en iPhone. El proyecto reemplaza por completo la interfaz anterior y puede publicarse con GitHub Pages.
+Aplicación web estática optimizada para Safari en iPhone.
 
-## Funciones locales
+## Verificación incluida
 
-- Selección de vídeos desde Archivos o Fotos mediante `<input accept="video/*">`.
-- Reproducción y selección de inicio/final.
-- Búsqueda heurística local de momentos con cambios de movimiento.
-- Conversión visual a 9:16 mediante canvas.
-- Textos, subtítulos manuales y efectos localmente.
-- Exportación mediante `MediaRecorder` y `canvas.captureStream`, con resultado MP4 cuando Safari informa soporte H.264/AAC.
-- Compartir mediante Web Share API y archivos.
-
-## Importante sobre Safari y iPhone
-
-MediaRecorder y `canvas.captureStream()` dependen de la versión de iOS/Safari. El archivo fuente debe ser compatible con el decodificador del iPhone: MP4 H.264/AAC es la opción más estable. Los recortes están limitados a 90 segundos para reducir el riesgo de quedarse sin memoria.
+- Subida desde Archivos/Fotos mediante `accept="video/*"`.
+- Recorte manual y heurística local de movimiento.
+- Formato vertical 1080×1920.
+- Texto y tres efectos visuales.
+- Exportación con `MediaRecorder` y pista de audio de `MediaStreamDestination`.
+- Compartir mediante Web Share API, con descarga como alternativa.
+- Límites de 2 GB en el archivo y 90 segundos por exportación.
 
 ## IA y subtítulos
 
-La aplicación no simula IA ni transcribe dentro del navegador. El análisis externo es opcional y se activa configurando una URL HTTPS propia. Para producción se recomienda no meter una clave privada en el navegador: crea un endpoint autenticado que expida solicitudes autorizadas o una sesión temporal.
+El análisis automático externo es opcional. Debe configurarse una URL HTTPS propia. El navegador envía el vídeo mediante POST multipart. El servidor debe validar el tamaño, limitar peticiones, habilitar CORS para el origen de GitHub Pages y eliminar los archivos temporales.
 
-El endpoint debe aceptar:
+Contrato esperado:
 
-- `POST` multipart/form-data.
-- Campos `file`, `start`, `end`, `language=es` y `purpose=highlights|captions`.
-- Cabecera opcional `Authorization: Bearer <clave>`.
+- Campos: `file`, `start`, `end`, `language=es`, `purpose=highlights|captions`.
+- Highlights: `{ "highlights": [{ "start": 12.4, "end": 32.4 }] }`.
+- Subtítulos: `{ "captions": [{ "start": 0, "end": 3.2, "text": "Texto" }] }`.
 
-Respuesta JSON de highlights:
+Las marcas de tiempo deben ser relativas al recorte solicitado. En producción no incluyas claves privadas en el archivo; usa autenticación temporal o un proxy protegido.
 
-```json
-{
-  "highlights": [
-    { "start": 12.4, "end": 32.4, "score": 0.92 }
-  ]
-}
-```
+## Compatibilidad
 
-Respuesta JSON de subtítulos:
-
-```json
-{
-  "captions": [
-    { "start": 0, "end": 3.2, "text": "Texto reconocido" }
-  ]
-}
-```
-
-Los servicios recomendados son un backend propio con Whisper/faster-whisper para transcripción y un modelo o análisis de escena para highlights. El servidor debe devolver tiempos relativos al clip seleccionado y aplicar límite de tamaño, CORS, autenticación y eliminación temporal del archivo.
+Usa MP4 con H.264/AAC. Safari determina el `mimeType` admitido con `MediaRecorder.isTypeSupported()`. Si Safari no ofrece MP4, solo queda actualizar iOS/Safari o usar FFmpeg en un servidor externo. La aplicación no descarga vídeos de YouTube ni simula una función IA inexistente.
 
 ## Publicación
 
-1. GitHub Pages puede publicar la rama `main` en la raíz.
-2. Usa HTTPS para que Web Share y las APIs externas funcionen correctamente.
-3. No uses YouTube como entrada: los navegadores no pueden descargar/recombinar vídeos de YouTube de forma legítima ni estable sin una integración de servidor con permisos adecuados.
-
-## Marca
-
-Proyecto independiente y sin afiliación con Rockstar Games, Take-Two Interactive o YouTube.
+GitHub Pages debe servir `index.html` desde la rama `main` por HTTPS.
