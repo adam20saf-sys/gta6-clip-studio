@@ -1,20 +1,163 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10131c"><title>GTA 6 Clip Studio</title>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>GTA 6 Clip Studio</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0b0e14;color:#f3f5fa;font:16px/1.5 system-ui,-apple-system,sans-serif}main{max-width:820px;margin:auto;padding:24px 15px 50px}.hero{text-align:center;padding:20px 5px}.hero h1{font-size:clamp(34px,8vw,52px);margin:12px 0}.hero p,.muted,.help,.foot{color:#aab3c4}.panel{background:#151b28;border:1px solid #303a4d;border-radius:16px;padding:18px;margin:15px 0}.step{color:#67e8f9;font-size:12px;font-weight:bold;letter-spacing:.1em}.panel h2{margin:5px 0 12px;font-size:21px}label{display:block;margin:12px 0 5px;font-weight:650}input{width:100%;padding:12px;border:1px solid #46516a;border-radius:10px;background:#0c111b;color:white;font:inherit}button{padding:12px 16px;border:0;border-radius:10px;background:#8057e8;color:white;font-weight:bold;font-size:15px}button.secondary{background:#293246;border:1px solid #46516a}.row{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.row button{flex:1}.frame{margin-top:12px;background:#080b11;border:1px dashed #46516a;border-radius:10px;overflow:hidden;min-height:90px;display:grid;place-items:center}.frame iframe{width:100%;aspect-ratio:16/9;border:0}.frame video{width:100%;max-height:450px}.status{white-space:pre-wrap;background:#0c1420;border-radius:10px;padding:12px;margin-top:12px;color:#d5deed}.range{display:grid;grid-template-columns:1fr 1fr;gap:10px}.foot{font-size:13px}@media(max-width:500px){.panel{padding:14px}}
-</style></head><body><main>
-<header class="hero"><span class="muted">CREATOR STUDIO · PRIMERA VERSIÓN</span><h1>GTA 6 <span style="color:#a78bfa">CLIP STUDIO</span></h1><p>Pega un enlace para ver el vídeo o sube gameplay tuyo para crear un fragmento.</p></header>
-<section class="panel"><div class="step">01 · YOUTUBE</div><h2>Pega el enlace de YouTube</h2><label for="youtubeUrl">Enlace del vídeo</label><input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..."><div class="row"><button id="previewBtn">Mostrar vista previa</button><button class="secondary" id="clearYoutube">Limpiar</button></div><div class="frame" id="youtubePreview"><span class="muted">Aquí aparecerá el vídeo.</span></div><p class="foot">El enlace sirve para mostrar el reproductor. Esta página no descarga ni extrae vídeos de YouTube. Para exportar un clip, sube un vídeo tuyo o que tengas permiso para editar en el apartado siguiente.</p></section>
-<section class="panel"><div class="step">02 · ARCHIVO DE VÍDEO</div><h2>Sube tu gameplay</h2><label for="videoFile">Seleccionar vídeo</label><input id="videoFile" type="file" accept="video/*"><div class="frame" id="localPreview"><span class="muted">La vista previa aparecerá aquí.</span></div><div id="videoDetails" class="status">Aún no has seleccionado ningún vídeo.</div></section>
-<section class="panel"><div class="step">03 · CREAR CLIP</div><h2>Elige el fragmento</h2><p class="help">Indica los segundos de inicio y final. Ejemplo: 12 a 32 crea un fragmento de 20 segundos.</p><div class="range"><div><label for="startTime">Inicio (segundos)</label><input id="startTime" type="number" min="0" step=".1" value="0"></div><div><label for="endTime">Final (segundos)</label><input id="endTime" type="number" min="0" step=".1" value="20"></div></div><div class="row"><button class="secondary" id="setStart">Usar segundo actual como inicio</button><button class="secondary" id="setEnd">Usar segundo actual como final</button></div><label for="clipTitle">Nombre del clip</label><input id="clipTitle" type="text" value="GTA-6-mi-clip"><div class="row"><button id="makeClip" disabled>Crear y descargar clip</button></div><div id="clipStatus" class="status">Selecciona primero un archivo de vídeo.</div><p class="foot">La exportación requiere que el navegador admita captura de vídeo. Si falla en iPhone, prueba Safari actualizado o un ordenador. Esta primera versión no detecta momentos con IA ni genera subtítulos automáticos.</p></section>
-<p class="foot" style="text-align:center">Herramienta independiente; no afiliada a Rockstar Games ni a YouTube.</p></main>
+:root{color-scheme:dark;--ink:#f7f8fb;--muted:#adb4c2;--panel:#151922;--line:#303646;--pink:#ff5b91;--yellow:#ffcb55;--violet:#9b84ff}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#252034 0,#11141d 42%,#090b10 100%);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(780px,100%);margin:auto;padding:env(safe-area-inset-top) 14px calc(42px + env(safe-area-inset-bottom))}.hero{text-align:center;padding:24px 4px 18px}.kicker{color:#d4caff;font-size:11px;font-weight:900;letter-spacing:.16em}.hero h1{margin:8px 0 6px;font-size:clamp(31px,9vw,50px);line-height:1}.hero h1 span{color:var(--pink)}.hero p{margin:8px auto 14px;max-width:560px;color:var(--muted)}.badge{display:inline-block;border:1px solid #51456e;background:#211c31;color:#d5ccff;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.panel{margin:12px 0;padding:16px;background:rgba(21,25,34,.96);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 34px #0005}.step{color:#cfc3ff;font-size:11px;font-weight:900;letter-spacing:.12em}h2{margin:4px 0 12px;font-size:19px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}label{display:block;margin:10px 0 6px;font-size:13px;font-weight:750}input,textarea,select{width:100%;min-height:46px;border:1px solid #444b60;border-radius:11px;padding:11px 12px;background:#090c13;color:#fff;font:inherit}textarea{min-height:78px;resize:vertical}input[type=file]{padding:8px}button{min-height:46px;border:0;border-radius:11px;padding:12px 14px;background:var(--pink);color:white;font:inherit;font-weight:850}button.secondary{border:1px solid #485169;background:#292d3b;color:#f7f7fb}button:disabled{opacity:.42}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.actions>*{flex:1 1 150px}.preview{margin-top:12px;min-height:120px;display:grid;place-items:center;overflow:hidden;border:1px dashed #4b5267;border-radius:13px;background:#05070a}video{display:block;width:100%;max-height:420px;background:#000}.status{margin-top:12px;padding:11px;border-radius:10px;background:#090c13;color:#dce1ee;font-size:13px;white-space:pre-wrap}.help{color:var(--muted);font-size:12px}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.chip{border:1px solid #454c62;background:#20242f;border-radius:999px;padding:7px 9px;font-size:12px}.chip button{border:0;min-height:0;padding:0;background:none;color:var(--yellow)}canvas{display:none}.hidden{display:none!important}.danger{color:#ff9caf}.foot{text-align:center;color:#929aad;font-size:12px}@media(max-width:390px){main{padding-left:10px;padding-right:10px}.panel{padding:14px}.grid3{grid-template-columns:1fr 1fr}.grid3>div:last-child{grid-column:1/-1}}
+</style>
+</head>
+<body><main>
+<header class="hero"><div class="kicker">CREATOR STUDIO · IPHONE</div><h1>GTA 6 <span>CLIP STUDIO</span></h1><p>Recorta, subtitula y convierte gameplay a vídeo vertical 9:16 desde tu iPhone.</p><span class="badge">Procesamiento local · Sin subir por defecto</span></header>
+
+<section class="panel"><div class="step">01 · FUENTE</div><h2>Selecciona el vídeo</h2>
+<label for="videoFile">Vídeo de Archivos o Fotos</label><input id="videoFile" type="file" accept="video/*" capture="environment">
+<div id="preview" class="preview"><span class="help">La vista previa aparecerá aquí</span></div>
+<div id="details" class="status">Esperando un vídeo.</div></section>
+
+<section class="panel"><div class="step">02 · FRAGMENTO</div><h2>Recorte automático o manual</h2>
+<div class="actions"><button id="autoHighlights" class="secondary" disabled>Buscar momentos (local)</button><button id="apiHighlights" class="secondary" disabled>Analizar con servidor / IA</button></div>
+<div class="grid"><div><label for="startTime">Inicio (s)</label><input id="startTime" type="number" min="0" step="0.1" value="0"></div><div><label for="endTime">Final (s)</label><input id="endTime" type="number" min="0.1" step="0.1" value="20"></div></div>
+<div class="actions"><button id="setStart" class="secondary" disabled>Marcar inicio actual</button><button id="setEnd" class="secondary" disabled>Marcar final actual</button></div>
+<div id="highlightList" class="chips"></div>
+<p class="help">El recorte automático local mide cambios de movimiento. El análisis IA necesita configurar un servicio propio; nunca se envía el vídeo a terceros sin tu autorización.</p></section>
+
+<section class="panel"><div class="step">03 · AJUSTES</div><h2>Formato y texto</h2>
+<div class="grid3"><div><label for="cropMode">Encuadre</label><select id="cropMode"><option value="cover">Rellenar 9:16</option><option value="contain">Mostrar completo</option></select></div><div><label for="effect">Efecto</label><select id="effect"><option value="none">Ninguno</option><option value="cinema">Cinemático</option><option value="vhs">VHS</option><option value="neon">Neón</option></select></div><div><label for="subtitleStyle">Subtítulos</label><select id="subtitleStyle"><option value="big">Grande</option><option value="small">Compacto</option><option value="none">Sin fondo</option></select></div></div>
+<label for="captionText">Texto o subtítulo</label><textarea id="captionText" maxlength="300" placeholder="Escribe aquí el texto que aparecerá…"></textarea>
+<div class="actions"><button id="apiCaptions" class="secondary" disabled>Generar subtítulos con servidor / IA</button><button id="clearCaptions" class="secondary">Borrar subtítulos</button></div>
+<div id="captionStatus" class="status">Subtítulos editables manualmente.</div></section>
+
+<section class="panel"><div class="step">04 · SERVIDOR IA <span class="help">(opcional)</span></div><h2>Configuración privada</h2>
+<label for="apiUrl">URL del endpoint HTTPS</label><input id="apiUrl" type="url" placeholder="https://tu-servidor.example.com/api/analyze">
+<label for="apiKey">Clave opcional del servidor</label><input id="apiKey" type="password" autocomplete="off" placeholder="Solo para tu servidor autorizado">
+<p class="help">Contrato: POST multipart con `file`, `start`, `end` y `language=es`; respuesta JSON con `highlights` y `captions`/`segments`. Guarda la clave solo en este dispositivo. Para producción, usa un proxy autenticado: no publiques claves privadas en el HTML.</p></section>
+
+<section class="panel"><div class="step">05 · EXPORTAR</div><h2>Vídeo vertical 1080 × 1920</h2>
+<div class="actions"><button id="exportBtn" disabled>Crear y compartir MP4</button></div>
+<div id="exportStatus" class="status">Primero selecciona un vídeo.</div><div class="actions"><button id="shareBtn" class="secondary hidden">Compartir / Guardar vídeo</button></div>
+<p class="help">Mantén Safari abierto. Los clips largos pueden agotar la memoria: se recomienda un máximo de 90 segundos por exportación.</p></section>
+<p class="foot">Herramienta independiente; no afiliada a Rockstar Games ni a Take-Two.</p>
+</main><canvas id="canvas" width="1080" height="1920"></canvas>
 <script>
-const $=id=>document.getElementById(id);let vid=null,objUrl=null;
-function youtubeId(s){try{let u=new URL(s),id=null;if(u.hostname==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0];else if(u.hostname.endsWith('youtube.com')){id=u.searchParams.get('v');if(!id){let p=u.pathname.split('/').filter(Boolean);if(['shorts','embed','live'].includes(p[0]))id=p[1]}}return id&&/^[A-Za-z0-9_-]{11}$/.test(id)?id:null}catch(e){return null}}
-$('previewBtn').onclick=()=>{let id=youtubeId($('youtubeUrl').value.trim());if(!id){$('youtubePreview').textContent='Enlace no válido. Pega una URL de YouTube o Shorts.';return}let f=document.createElement('iframe');f.src='https://www.youtube-nocookie.com/embed/'+id;f.title='Vista previa YouTube';f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';f.allowFullscreen=true;$('youtubePreview').replaceChildren(f)};
-$('clearYoutube').onclick=()=>{$('youtubeUrl').value='';$('youtubePreview').innerHTML='<span class="muted">Aquí aparecerá el vídeo.</span>'};
-$('videoFile').onchange=()=>{let file=$('videoFile').files[0];if(!file)return;if(!file.type.startsWith('video/')){$('videoDetails').textContent='Selecciona un archivo de vídeo.';return}if(objUrl)URL.revokeObjectURL(objUrl);objUrl=URL.createObjectURL(file);let v=document.createElement('video');v.controls=true;v.playsInline=true;v.preload='metadata';v.src=objUrl;$('localPreview').replaceChildren(v);vid=v;v.onloadedmetadata=()=>{$('videoDetails').textContent='Archivo: '+file.name+'\nDuración: '+v.duration.toFixed(1)+' s';$('endTime').value=Math.min(20,v.duration).toFixed(1);$('makeClip').disabled=false};v.onerror=()=>{$('videoDetails').textContent='No se pudo abrir. Prueba con un vídeo MP4.'}};
-$('setStart').onclick=()=>{if(vid)$('startTime').value=vid.currentTime.toFixed(1)};$('setEnd').onclick=()=>{if(vid)$('endTime').value=vid.currentTime.toFixed(1)};
-$('makeClip').onclick=async()=>{if(!vid)return;let a=Number($('startTime').value),b=Number($('endTime').value);if(a<0||b<=a||b>vid.duration){$('clipStatus').textContent='Revisa los tiempos: el final debe ser mayor que el inicio y no superar la duración.';return}let cap=vid.captureStream||vid.mozCaptureStream;if(!cap||!window.MediaRecorder){$('clipStatus').textContent='Tu navegador no admite esta exportación. Prueba Safari actualizado o un ordenador.';return}let stream=cap.call(vid),types=['video/mp4;codecs=h264,aac','video/mp4','video/webm;codecs=vp8,opus','video/webm'],mime=types.find(t=>MediaRecorder.isTypeSupported(t))||'',rec;try{rec=new MediaRecorder(stream,mime?{mimeType:mime}:undefined)}catch(e){$('clipStatus').textContent='No se pudo iniciar la exportación. Prueba otro navegador.';return}let chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};rec.onerror=()=>{$('clipStatus').textContent='Error durante la exportación.'};rec.onstop=()=>{let blob=new Blob(chunks,{type:rec.mimeType||'video/webm'});if(!blob.size){$('clipStatus').textContent='No se generó el archivo. Prueba con MP4 u otro navegador.';return}let ext=blob.type.includes('mp4')?'mp4':'webm',name=($('clipTitle').value||'gta6-clip').replace(/[^a-z0-9-_]/gi,'-');let url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=(name||'gta6-clip')+'.'+ext;document.body.appendChild(link);link.click();link.remove();$('clipStatus').textContent='Clip creado: '+link.download+'. Busca el archivo en Descargas/Archivos.';setTimeout(()=>URL.revokeObjectURL(url),60000);stream.getTracks().forEach(t=>t.stop());$('makeClip').disabled=false};
-$('makeClip').disabled=true;$('clipStatus').textContent='Creando el clip… no cierres la página.';vid.pause();vid.currentTime=a;await new Promise(resolve=>{let done=()=>resolve();vid.addEventListener('seeked',done,{once:true});setTimeout(resolve,2500)});rec.start(200);try{await vid.play()}catch(e){rec.stop();$('clipStatus').textContent='Pulsa reproducir en el vídeo y vuelve a intentarlo.';return}let stop=()=>{if(vid.currentTime>=b){vid.pause();vid.removeEventListener('timeupdate',stop);if(rec.state!=='inactive')rec.stop()}};vid.addEventListener('timeupdate',stop);vid.addEventListener('ended',()=>{if(rec.state!=='inactive')rec.stop()},{once:true})};
-</script></body></html>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), canvas=$('canvas'), ctx=canvas.getContext('2d',{alpha:false});
+let video=null, sourceUrl=null, audioContext=null, mediaSource=null, shareFile=null, timedCaptions=null, exportBusy=false;
+
+try{$('apiUrl').value=localStorage.getItem('gtaClipApiUrl')||'';$('apiKey').value=localStorage.getItem('gtaClipApiKey')||''}catch(e){}
+$('apiUrl').addEventListener('change',()=>localStorage.setItem('gtaClipApiUrl',$('apiUrl').value.trim()));
+$('apiKey').addEventListener('change',()=>localStorage.setItem('gtaClipApiKey',$('apiKey').value));
+
+function setStatus(id,text){$(id).textContent=text}
+function safeName(s){return(s||'gta6-clip').trim().normalize('NFKD').replace(/[^a-zA-Z0-9-_]/g,'-').replace(/-+/g,'-').slice(0,50)||'gta6-clip'}
+function formatTime(s){const m=Math.floor(s/60),r=Math.max(0,Math.floor(s%60));return `${m}:${String(r).padStart(2,'0')}`}
+
+$('videoFile').addEventListener('change',e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!file.type.startsWith('video/')){setStatus('details','Selecciona un archivo de vídeo válido.');return}
+ if(file.size>2*1024*1024*1024){setStatus('details','El vídeo supera 2 GB. Cárgalo desde Fotos/Archivos en tamaño original o divide el clip antes.');return}
+ if(sourceUrl)URL.revokeObjectURL(sourceUrl);sourceUrl=URL.createObjectURL(file);
+ const v=document.createElement('video');v.src=sourceUrl;v.controls=true;v.playsInline=true;v.preload='metadata';v.setAttribute('playsinline','');
+ $('preview').replaceChildren(v);video=v;
+ v.addEventListener('loadedmetadata',()=>{
+  if(!Number.isFinite(v.duration)){setStatus('details','Safari no pudo leer la duración de este formato. Prueba con MP4/H.264.');return}
+  setStatus('details',`${file.name}\nDuración: ${formatTime(v.duration)} · ${v.videoWidth}×${v.videoHeight}\nTamaño: ${(file.size/1024/1024).toFixed(1)} MB`);
+  $('startTime').value='0';$('endTime').value=Math.min(20,v.duration).toFixed(1);
+  ['setStart','setEnd','autoHighlights','apiHighlights','apiCaptions','exportBtn'].forEach(id=>$(id).disabled=false);
+  $('highlightList').innerHTML='';shareFile=null;$('shareBtn').classList.add('hidden');
+ },{once:true});
+ v.addEventListener('error',()=>setStatus('details','Safari no pudo decodificar el vídeo. Usa MP4 con vídeo H.264 y audio AAC.'));
+});
+
+$('setStart').onclick=()=>{if(video)$('startTime').value=video.currentTime.toFixed(1)};
+$('setEnd').onclick=()=>{if(video)$('endTime').value=video.currentTime.toFixed(1)};
+
+function chooseRange(a,b){if(!video)return;$('startTime').value=Number(a).toFixed(1);$('endTime').value=Number(Math.min(b,video.duration)).toFixed(1);video.currentTime=a}
+
+async function seekTo(t){await new Promise((resolve,reject)=>{if(!video){reject(new Error('No hay vídeo'));return}if(Math.abs(video.currentTime-t)<.04){resolve();return}const done=()=>{video.removeEventListener('error',fail);resolve()};const fail=()=>{video.removeEventListener('seeked',done);reject(new Error('No se pudo acceder al instante solicitado'))};video.addEventListener('seeked',done,{once:true});video.addEventListener('error',fail,{once:true});video.currentTime=t;setTimeout(done,2500)})}
+
+$('autoHighlights').onclick=async()=>{
+ if(!video)return;const dur=video.duration;if(dur<2){chooseRange(0,dur);return}
+ $('autoHighlights').disabled=true;setStatus('details','Analizando movimiento local…');
+ const old=video.currentTime, oldMuted=video.muted;video.muted=true;
+ const sample=document.createElement('canvas');sample.width=160;sample.height=284;const sx=sample.getContext('2d',{willReadFrequently:true});
+ let prev=null, scores=[],step=Math.min(2,Math.max(.5,dur/30)),count=Math.ceil(dur/step);
+ try{
+  for(let i=0;i<count;i++){const t=Math.min(i*step,dur-.05);await seekTo(t);sx.drawImage(video,0,0,sample.width,sample.height);const d=sx.getImageData(0,0,sample.width,sample.height).data;let score=0;if(prev){for(let p=0;p<d.length;p+=64){const x=Math.abs(d[p]-prev[p])+Math.abs(d[p+1]-prev[p+1])+Math.abs(d[p+2]-prev[p+2]);score+=x}}scores.push(score);prev=d}
+  let best=-1,bestScore=-1;for(let i=0;i<scores.length;i++){const score=scores[i]-(i>0?scores[i-1]*.15:0);if(score>bestScore){bestScore=score;best=i}}
+  const center=best*step,length=Math.min(20,Math.max(8,dur*.12)),a=Math.max(0,Math.min(dur-length,center-length/2)),b=a+length;
+  chooseRange(a,b);$('highlightList').innerHTML=`<span class="chip">Mejor movimiento · ${formatTime(a)}–${formatTime(b)} <button id="useHighlight">Usar</button></span>`;$('useHighlight').onclick=()=>chooseRange(a,b);setStatus('details',`Momento recomendado: ${formatTime(a)}–${formatTime(b)}. Puedes ajustarlo manualmente.`)
+ }catch(e){setStatus('details','No se pudo analizar el vídeo localmente: '+e.message)}finally{video.muted=oldMuted;video.currentTime=old;$('autoHighlights').disabled=false}
+};
+
+function apiConfigured(){const u=$('apiUrl').value.trim();if(!/^https:\/\//i.test(u)){setStatus('captionStatus','Configuración: introduce una URL HTTPS de tu servidor propio.');setStatus('exportStatus','El análisis externo requiere HTTPS.');return false}return true}
+
+async function callApi(file, extra){if(!apiConfigured())return null;
+ const fd=new FormData();fd.append('file',file);Object.entries(extra||{}).forEach(([k,v])=>fd.append(k,String(v)));fd.append('language','es');
+ const headers={'Accept':'application/json'};const key=$('apiKey').value.trim();if(key)headers.Authorization='Bearer '+key;
+ const res=await fetch($('apiUrl').value.trim(),{method:'POST',headers,body:fd,signal:AbortSignal.timeout?AbortSignal.timeout(240000):undefined});
+ if(!res.ok)throw new Error(`Servidor HTTP ${res.status}`);const data=await res.json();if(data.error)throw new Error(data.error);return data;
+}
+
+$('apiHighlights').onclick=async()=>{
+ const file=$('videoFile').files&&$('videoFile').files[0];if(!file||!video)return;
+ if(file.size>500*1024*1024){setStatus('captionStatus','El vídeo supera 500 MB; este servicio necesita un servidor con límites y almacenamiento configurados.');return}
+ $('apiHighlights').disabled=true;setStatus('captionStatus','Enviando el vídeo al servidor configurado…');
+ try{const d=await callApi(file,{start:0,end:Math.min(video.duration,600),purpose:'highlights'});if(!d)return;const hs=d.highlights||[];if(!hs.length)throw new Error('El servidor no devolvió highlights');$('highlightList').innerHTML='';hs.slice(0,8).forEach((h,i)=>{const a=Number(h.start),b=Number(h.end);if(!Number.isFinite(a)||!Number.isFinite(b)||b<=a)return;const span=document.createElement('span');span.className='chip';span.textContent=`IA ${i+1} · ${formatTime(a)}–${formatTime(b)} `;const btn=document.createElement('button');btn.textContent='Usar';btn.onclick=()=>chooseRange(a,b);span.appendChild(btn);$('highlightList').appendChild(span)});setStatus('captionStatus',`Servidor: ${hs.length} momentos recibidos.`)}catch(e){setStatus('captionStatus','Error del análisis IA: '+e.message)}finally{$('apiHighlights').disabled=false}
+};
+
+$('apiCaptions').onclick=async()=>{
+ const file=$('videoFile').files&&$('videoFile').files[0];if(!file||!video)return;
+ const a=Number($('startTime').value),b=Number($('endTime').value);if(!Number.isFinite(a)||!Number.isFinite(b)||b<=a)return;
+ $('apiCaptions').disabled=true;setStatus('captionStatus','Transcribiendo con el servidor configurado…');
+ try{const d=await callApi(file,{start:a,end:b,purpose:'captions'});if(!d)return;let segments=d.captions||d.segments||[];if(!Array.isArray(segments)||!segments.length)throw new Error('El servidor no devolvió captions ni segments');timedCaptions=segments.map(s=>({start:Number(s.start||0)+a,end:Number(s.end||s.duration||0)+a,text:String(s.text||'').trim()})).filter(s=>s.text);$('captionText').value=timedCaptions.map(s=>s.text).join('\n');setStatus('captionStatus',`Transcripción recibida: ${timedCaptions.length} segmentos en español.`)}catch(e){setStatus('captionStatus','Error de subtítulos: '+e.message)}finally{$('apiCaptions').disabled=false}
+};
+$('clearCaptions').onclick=()=>{timedCaptions=null;$('captionText').value='';setStatus('captionStatus','Subtítulos borrados.')};
+
+function wrappedLines(text,maxWidth){const words=text.trim().split(/\s+/),lines=[];let line='';ctx.font='900 58px -apple-system,Arial';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);return lines}
+
+function drawFrame(){if(!video||!video.videoWidth)return;const W=canvas.width,H=canvas.height,vw=video.videoWidth,vh=video.videoHeight;
+ ctx.save();ctx.fillStyle='#050608';ctx.fillRect(0,0,W,H);
+ let dw,vhCrop,vwCrop,sx=0,sy=0,dx=0,dy=0;const mode=$('cropMode').value;
+ if(mode==='contain'){const scale=Math.min(W/vw,H/vh);dw=vw*scale;const dh=vh*scale;dx=(W-dw)/2;dy=(H-dh)/2;ctx.drawImage(video,dx,dy,dw,dh)}else{const scale=Math.max(W/vw,H/vh);dw=vw*scale;const dh=vh*scale;dx=(W-dw)/2;dy=(H-dh)/2;ctx.drawImage(video,dx,dy,dw,dh)}
+ const effect=$('effect').value;if(effect==='cinema'){ctx.fillStyle='rgba(20,12,30,.18)';ctx.fillRect(0,0,W,H)}else if(effect==='vhs'){ctx.fillStyle='rgba(255,70,130,.08)';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(255,255,255,.12)';for(let y=0;y<H;y+=12)ctx.fillRect(0,y,W,2)}else if(effect==='neon'){ctx.fillStyle='rgba(255,43,140,.13)';ctx.fillRect(0,0,W,H)}
+ let text=$('captionText').value.trim();if(timedCaptions){const active=timedCaptions.find(s=>video.currentTime>=s.start&&video.currentTime<=s.end);if(active)text=active.text}
+ if(text&&$('subtitleStyle').value!=='none' || text&&$('subtitleStyle').value==='none'){const style=$('subtitleStyle').value,lines=wrappedLines(text,900),lineH=style==='big'?72:62,boxH=lines.length*lineH+(style==='none'?0:54),y=H-190-boxH;if(style==='small'||style==='big'){ctx.fillStyle='rgba(0,0,0,.68)';ctx.beginPath();ctx.roundRect(55,y,970,boxH,24);ctx.fill()}ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.strokeStyle='#000';ctx.lineWidth=9;ctx.fillStyle='#fff';lines.forEach((ln,i)=>{const yy=y+(style==='none'?27:27)+lineH*(i+.5);ctx.strokeText(ln,W/2,yy,900);ctx.fillText(ln,W/2,yy,900)})}
+ ctx.restore();
+}
+
+$('exportBtn').onclick=async()=>{
+ if(!video||exportBusy)return;const a=Number($('startTime').value),b=Number($('endTime').value);
+ if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=a||b>video.duration){setStatus('exportStatus','Revisa el recorte: inicio ≥ 0 y final mayor al inicio, dentro de la duración.');return}
+ if(b-a>90){setStatus('exportStatus','El recorte supera 90 segundos. Selecciona un fragmento más corto para evitar bloqueos en iOS.');return}
+ if(!HTMLCanvasElement.prototype.captureStream){setStatus('exportStatus','Este Safari no admite captura de canvas. Actualiza iOS/Safari o usa un vídeo MP4 en Safari actualizado.');return}
+ const types=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'];const mime=types.find(t=>typeof MediaRecorder!=='undefined'&&MediaRecorder.isTypeSupported(t));
+ if(!mime){setStatus('exportStatus','Este navegador no ofrece un codec compatible con MediaRecorder. Actualiza iOS/Safari.');return}
+ exportBusy=true;$('exportBtn').disabled=true;$('shareBtn').classList.add('hidden');shareFile=null;let stream=null,rec=null,stopped=false,raf=0,chunks=[];
+ try{
+  setStatus('exportStatus','Preparando audio y vídeo…');
+  if(!audioContext){const AC=window.AudioContext||window.webkitAudioContext;if(AC){audioContext=new AC();mediaSource=audioContext.createMediaElementSource(video);const dest=audioContext.createMediaStreamDestination();mediaSource.connect(dest);mediaSource.connect(audioContext.destination)}}
+  if(audioContext&&audioContext.state==='suspended')await audioContext.resume();
+  stream=canvas.captureStream(30);
+  if(audioContext){const dest=(mediaSource&&audioContext.createMediaStreamDestination);/* destination tracks are attached below if available */}
+  if(window.__gtaClipAudioDest){window.__gtaClipAudioDest.stream.getAudioTracks().forEach(t=>stream.addTrack(t))}
+  await seekTo(a);drawFrame();
+  rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:6500000,audioBitsPerSecond:128000});chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  const finished=new Promise((resolve,reject)=>{rec.onstop=resolve;rec.onerror=e=>reject(e.error||new Error('Falló la grabación'))});rec.start(250);
+  const draw=()=>{if(stopped)return;drawFrame();raf=requestAnimationFrame(draw)};draw();setStatus('exportStatus','Grabando el clip… Mantén Safari abierto.');
+  await video.play();await new Promise(resolve=>{const tick=()=>{if(stopped||video.currentTime>=b||video.ended){resolve();return}setTimeout(tick,70)};tick()});
+  video.pause();stopped=true;cancelAnimationFrame(raf);await new Promise(r=>setTimeout(r,120));rec.stop();await finished;
+  const blob=new Blob(chunks,{type:mime.split(';')[0]});if(!blob.size)throw new Error('El resultado quedó vacío');
+  const ext=blob.type.includes('mp4')?'mp4':'webm',name=safeName($('captionText').value&&$('apiKey').value?'gta6-clip':$('captionText').value?'gta6-clip':safeName('gta6-clip'))+'.'+ext;
+  shareFile=new File([blob],name,{type:blob.type});setStatus('exportStatus',`Clip creado: ${(blob.size/1024/1024).toFixed(1)} MB. Compatible con iPhone.`);$('shareBtn').classList.remove('hidden');
+  $('shareBtn').onclick=async()=>{try{if(navigator.canShare&&navigator.canShare({files:[shareFile]}))await navigator.share({files:[shareFile],title:name});else{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)}}catch(e){if(e.name!=='AbortError')setStatus('exportStatus','No se pudo abrir Compartir. Mantén pulsado el vídeo o usa Descargas.')}}
+ }catch(e){stopped=true;if(rec&&rec.state!=='inactive')try{rec.stop()}catch(_){}setStatus('exportStatus','No se pudo exportar: '+(e.message||e)+'. Prueba MP4/H.264, recorte de menos de 90 s y Safari actualizado.')}
+ finally{exportBusy=false;$('exportBtn').disabled=false;if(stream)stream.getTracks().forEach(t=>t.stop());if(raf)cancelAnimationFrame(raf)}
+};
+})();
+</script>
+</body></html>
